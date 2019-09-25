@@ -64,9 +64,10 @@ func main() {
 
 func renderLists() {
 	updateLists()
+
 	taskListView.Clear()
 	for _, v := range TaskList {
-		taskListView.AddItem(fmt.Sprintf("%s %s", FormatDone(v.Completed), v.Todo), "", 0, nil)
+		taskListView.AddItem(fmt.Sprintf("%s %s %s", FormatDone(v.Completed), v.Priority, v.Todo), "", 0, nil)
 	}
 
 	projectListView.Clear()
