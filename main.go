@@ -5,6 +5,7 @@ import (
 	"github.com/JamesClonk/go-todotxt"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
+	"os"
 )
 
 var filePath string = "todo.txt"
@@ -28,6 +29,10 @@ var currentPage = "main"
 var app = tview.NewApplication()
 
 func main() {
+	if len(os.Args) > 1 {
+		filePath = os.Args[1]
+	}
+
 	LoadFromFile(filePath)
 	renderLists()
 
