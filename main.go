@@ -23,6 +23,8 @@ var editInputView = tview.NewInputField()
 
 var priorityInputView = tview.NewInputField()
 
+var currentPage = "main"
+
 var app = tview.NewApplication()
 
 func main() {
@@ -34,7 +36,7 @@ func main() {
 			AddItem(nil, 0, 1, false).
 			AddItem(tview.NewFlex().SetDirection(tview.FlexRow).
 				AddItem(nil, 0, 1, false).
-				AddItem(p, height, 1, false).
+				AddItem(p, height, 3, false).
 				AddItem(nil, 0, 1, false), width, 1, false).
 			AddItem(nil, 0, 1, false)
 	}
@@ -54,7 +56,9 @@ func main() {
 	verticalFlex.AddItem(taskListView, 0, 5, false)
 
 	horizontalFlex.AddItem(verticalFlex, 0, 1, false)
-	pages.AddPage("main", horizontalFlex, true, true).AddPage("editPriority", modal(priorityInputView, 20, 3), true, false)
+	pages.AddPage("main", horizontalFlex, true, true)
+	pages.AddPage("editPriority", modal(priorityInputView, 20, 3), true, false)
+	pages.AddPage("detail", modal(createDetailPage(), 70, 0), true, false)
 
 	app.SetInputCapture(keyHandler)
 	if err := app.SetRoot(pages, true).SetFocus(taskListView).Run(); err != nil {
@@ -82,6 +86,13 @@ func renderLists() {
 }
 
 func taskListKeyHandler(event *tcell.EventKey) *tcell.EventKey {
+	if event.Key() == tcell.KeyEnter {
+		pages.SwitchToPage("detail")
+		currentPage = "detail"
+
+		setDetailPageData(TaskList[taskListView.GetCurrentItem()])
+	}
+
 	switch event.Rune() {
 	case 'x':
 		index := taskListView.GetCurrentItem()
@@ -99,6 +110,7 @@ func taskListKeyHandler(event *tcell.EventKey) *tcell.EventKey {
 		app.SetFocus(editInputView)
 	case 'p':
 		pages.SwitchToPage("editPriority")
+		currentPage = "editPriority"
 		app.SetFocus(priorityInputView)
 
 	}
@@ -107,6 +119,9 @@ func taskListKeyHandler(event *tcell.EventKey) *tcell.EventKey {
 }
 
 func keyHandler(event *tcell.EventKey) *tcell.EventKey {
+	if currentPage != "main" && currentPage != "editPriority" {
+		return event
+	}
 	if app.GetFocus() == addInputView || app.GetFocus() == editInputView || app.GetFocus() == priorityInputView {
 		return event
 	}
@@ -181,6 +196,7 @@ func addInputDoneHandler(key tcell.Key) {
 func resetAndHidePriorityInputField() {
 	priorityInputView.SetText("")
 	pages.SwitchToPage("main")
+	currentPage = "main"
 	app.SetFocus(taskListView)
 }
 
