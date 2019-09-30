@@ -15,7 +15,7 @@ var verticalFlex = tview.NewFlex()
 var leftList = tview.NewFlex().SetDirection(tview.FlexRow)
 var pages = tview.NewPages()
 
-var taskListView = tview.NewList().ShowSecondaryText(false)
+var taskListView = tview.NewList().ShowSecondaryText(true)
 var contextListView = tview.NewList().ShowSecondaryText(false)
 var projectListView = tview.NewList().ShowSecondaryText(false)
 
@@ -76,7 +76,7 @@ func renderLists() {
 
 	taskListView.Clear()
 	for _, v := range TaskList {
-		taskListView.AddItem(fmt.Sprintf("%s %s %s", FormatDone(v.Completed), v.Priority, v.Todo), "", 0, nil)
+		taskListView.AddItem(fmt.Sprintf("%s %s [red]%s[white] %s", FormatDone(v.Completed), v.Priority, FormatDate(v.DueDate), v.Todo), fmt.Sprintf("\t \t [yellow]%s[white] %v %v", FormatDate(v.CreatedDate), v.Contexts, v.Projects), 0, nil)
 	}
 
 	projectListView.Clear()
