@@ -14,7 +14,7 @@ This project is currently work in progress, do not use it in production nor use 
 go get github.com/enrico-kaack/goTodo
 ```
 
-## Useage
+## Usage
 ```
 gotodo <path-to-todo.txt>
 ```
